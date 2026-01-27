@@ -16,3 +16,20 @@ class User {
 const chai = new User("chai", "chai@gmail.com", "123")
 console.log(chai.encryptPassword());
 console.log(chai.changeUsername());
+
+
+//Behind the Scene
+
+function User(username , email, password){
+        this.username = username;
+        this.email = email;
+        this.password = password
+    }
+
+User.prototype.encryptPassword = function(){
+    return `${this.password}abc`
+}
+
+const chai = new User("chai", "chai@gmail.com", "123")
+console.log(chai.encryptPassword());
+console.log(chai.changeUsername());

@@ -38,3 +38,10 @@ const tea =  createUser("tea", 250)
 
 chai.printMe()
 
+/**BEHIND THE SCENES OF new keyword
+ * A new objecr is created
+ * A prototype is linked
+ * the constructor is called
+ * the new object is returned
+ * 
+ */
