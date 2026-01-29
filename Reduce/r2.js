@@ -23,6 +23,11 @@ const expenses = [
 ]
 const categorizedExpenses = expenses.reduce((total, item)=> {
     const key = item.category;
+    //food
+
+    {"food"}
+    console.log(total[key])
+
     if(!total[key]){
         total[key] = {transactions: 0,total: 0 };
     }
@@ -32,3 +37,11 @@ const categorizedExpenses = expenses.reduce((total, item)=> {
 },{});
 
 console.log(categorizedExpenses);
+
+
+const data ={  woman:"arju"}
+console.log(data["woman"]);
+
+
+
+what are the types are used to extract data from object 

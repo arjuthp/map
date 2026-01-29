@@ -20,11 +20,19 @@ const productCostDetails = [
 
  let tax = 0.08
  const reducedCost = productCostDetails.reduce((total, value)=> {
-  const totalvalue = value.price * value.quantity;
-  total.subtotal += totalvalue;
-  total.tax = total.subtotal * tax;
+  console.log("totallll", total)
+  console.log("valueeeeeee", value)
+  const totalvalue = value.price * value.quantity;// 999*1=999
+  // console.log("total value", totalvalue)
+  total.subtotal += totalvalue;//0 + 999
+  total.tax = total.subtotal * tax;//999*0.08//988
   total.total = total.subtotal + total.tax; 
-  return total;
+  console.log("tooooooootal", total)
+  return total;//
   
  }, {subtotal:0, tax:0 , total:0 });
+
+
  console.log(reducedCost);
+
+
