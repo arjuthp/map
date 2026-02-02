@@ -6,6 +6,9 @@
 // Your Task: Use reduce to create a flat array of all items with orderId and customer added to each item.
 // Expected Output:
 // javascript
+
+
+
 // [
 //   {orderId: "ORD001", customer: "John", productId: "P1", name: "Laptop", price: 999},
 //   {orderId: "ORD001", customer: "John", productId: "P2", name: "Mouse", price: 25},
@@ -15,6 +18,7 @@
 // ]
 
 const nestedAPI = [
+  
   {
     orderId: "ORD001",
     customer: "John",
@@ -23,6 +27,8 @@ const nestedAPI = [
       {productId: "P2", name: "Mouse", price: 25}
     ]
   },
+
+
   {
     orderId: "ORD002",
     customer: "Sarah",
@@ -40,19 +46,47 @@ const nestedAPI = [
   }
 ]
 
-const flattenedAPI = nestedAPI.reduce((accum, value)=>{
-    value.items.forEach(item =>{
-        accum.push({
-            orderId: value.orderId,
-            customer: value.customer,
-            productId: item.productId,
-            name: item.name,
-            price: item.price
 
-        });
 
-    })
-    return accum;
 
-}, []);
-console.log(flattenedAPI);
+
+nestedAPI.forEach(item => {
+  item.items.forEach(element => {
+    console.log(element.productId);
+  });
+});
+
+
+
+
+// const data =   [
+//       {productId: "P1", name: "Laptop", price: 999},
+//       {productId: "P2", name: "Mouse", price: 25}
+//     ]
+
+
+// let vari = data.forEach(item => {
+//   console.log(item.productId)
+
+// })
+// ;
+// console.log(vari)
+
+
+
+// const flattenedAPI = nestedAPI.reduce((accum, value)=>{
+//     value.items.forEach(item =>{
+//         accum.push({
+//             orderId: value.orderId,
+//             customer: value.customer,
+//             productId: item.productId,
+//             name: item.name,
+//             price: item.price
+
+//         });
+
+//     })
+//     return accum;
+
+// }, []);
+// console.log(flattenedAPI);

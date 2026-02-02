@@ -10,6 +10,7 @@ console.log(`Context: Financial app needs to organize expenses by category for b
 //   food: {transactions: 3, total: 225},
 //   utilities: {transactions: 2, total: 125},
 //   entertainment: {transactions: 2, total: 45}
+//
 // }
 
 const expenses = [
@@ -21,16 +22,22 @@ const expenses = [
   {id: 6, description: "Coffee", amount: 15, category: "food"},
   {id: 7, description: "Netflix", amount: 15, category: "entertainment"}
 ]
+
+
 const categorizedExpenses = expenses.reduce((total, item)=> {
     const key = item.category;
     //food
 
-    {"food"}
-    console.log(total[key])
+   
+    
 
-    if(!total[key]){
+    if(!total[key]){ //
+        // console.log(total[key])
         total[key] = {transactions: 0,total: 0 };
-    }
+
+      }
+
+
     total[key].transactions += 1;
     total[key].total += item.amount;
     return total;
@@ -39,9 +46,10 @@ const categorizedExpenses = expenses.reduce((total, item)=> {
 console.log(categorizedExpenses);
 
 
+{food:"arju"}
+
 const data ={  woman:"arju"}
 console.log(data["woman"]);
 
 
 
-what are the types are used to extract data from object 

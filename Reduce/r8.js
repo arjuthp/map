@@ -27,6 +27,7 @@ const temperatureReadings = [
 const reducedTemperatureReadings = temperatureReadings.reduce((accum, value)=>{
     const time= value.timestamp.split(' ')[1].split(':')[0];
     let key = time >=16 ? "16:00": time >=15 && time <= 16 ? "15:00" : "14:00";    
+    
     if(!accum[key]){
         accum[key] = {
             min: Infinity,

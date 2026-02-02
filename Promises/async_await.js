@@ -5,7 +5,11 @@ async function fetchData() {
     return "Data fetched!";
 }
 
-fetchData().then(data => console.log(data));
+const data = fetchData()
+console.log(data)
+
+console.log(fetchData())
+
 
 // 2. Async function with await
 function simulateApiCall() {

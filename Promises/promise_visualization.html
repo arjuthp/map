@@ -1,0 +1,441 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Promise Callbacks Visualization</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 20px;
+            padding: 40px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+        }
+
+        h1 {
+            text-align: center;
+            color: #667eea;
+            margin-bottom: 10px;
+            font-size: 2.5em;
+        }
+
+        .subtitle {
+            text-align: center;
+            color: #666;
+            margin-bottom: 40px;
+            font-size: 1.2em;
+        }
+
+        .code-section {
+            background: #1e1e1e;
+            color: #d4d4d4;
+            padding: 30px;
+            border-radius: 15px;
+            margin-bottom: 30px;
+            font-family: 'Courier New', monospace;
+            font-size: 16px;
+            line-height: 1.8;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .code-line {
+            margin: 5px 0;
+            padding: 5px 10px;
+            border-radius: 5px;
+            transition: all 0.3s ease;
+        }
+
+        .callback-1 { background: rgba(255, 107, 107, 0.2); border-left: 4px solid #ff6b6b; }
+        .callback-2 { background: rgba(78, 205, 196, 0.2); border-left: 4px solid #4ecdc4; }
+        .callback-3 { background: rgba(255, 195, 18, 0.2); border-left: 4px solid #ffc312; }
+
+        .highlight {
+            animation: pulse 1s ease-in-out;
+        }
+
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.02); box-shadow: 0 0 20px rgba(255,255,255,0.3); }
+        }
+
+        .keyword { color: #569cd6; }
+        .function { color: #dcdcaa; }
+        .string { color: #ce9178; }
+        .comment { color: #6a9955; font-style: italic; }
+
+        .legend {
+            display: flex;
+            justify-content: space-around;
+            margin-bottom: 30px;
+            flex-wrap: wrap;
+            gap: 20px;
+        }
+
+        .legend-item {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 15px 25px;
+            background: #f8f9fa;
+            border-radius: 10px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+
+        .legend-color {
+            width: 30px;
+            height: 30px;
+            border-radius: 5px;
+        }
+
+        .color-1 { background: #ff6b6b; }
+        .color-2 { background: #4ecdc4; }
+        .color-3 { background: #ffc312; }
+
+        .control-panel {
+            text-align: center;
+            margin: 30px 0;
+        }
+
+        .btn {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            padding: 15px 40px;
+            font-size: 18px;
+            border-radius: 50px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(102, 126, 234, 0.4);
+            margin: 0 10px;
+        }
+
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(102, 126, 234, 0.6);
+        }
+
+        .btn:active {
+            transform: translateY(0);
+        }
+
+        .timeline {
+            margin: 40px 0;
+            padding: 30px;
+            background: #f8f9fa;
+            border-radius: 15px;
+        }
+
+        .timeline-item {
+            display: flex;
+            align-items: center;
+            margin: 20px 0;
+            padding: 20px;
+            background: white;
+            border-radius: 10px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            opacity: 0.3;
+            transition: all 0.5s ease;
+        }
+
+        .timeline-item.active {
+            opacity: 1;
+            transform: scale(1.02);
+            box-shadow: 0 4px 20px rgba(102, 126, 234, 0.3);
+        }
+
+        .timeline-number {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 24px;
+            font-weight: bold;
+            margin-right: 20px;
+            flex-shrink: 0;
+        }
+
+        .timeline-content {
+            flex: 1;
+        }
+
+        .timeline-title {
+            font-size: 20px;
+            font-weight: bold;
+            color: #333;
+            margin-bottom: 5px;
+        }
+
+        .timeline-desc {
+            color: #666;
+            font-size: 16px;
+        }
+
+        .output-box {
+            background: #1e1e1e;
+            color: #4ecdc4;
+            padding: 20px;
+            border-radius: 10px;
+            font-family: 'Courier New', monospace;
+            font-size: 18px;
+            min-height: 60px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-top: 20px;
+        }
+
+        .output-box.show {
+            animation: fadeIn 0.5s ease-in;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(-10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .info-box {
+            background: #e3f2fd;
+            border-left: 5px solid #2196f3;
+            padding: 20px;
+            border-radius: 10px;
+            margin: 20px 0;
+        }
+
+        .info-box h3 {
+            color: #1976d2;
+            margin-bottom: 10px;
+        }
+
+        .info-box p {
+            color: #555;
+            line-height: 1.6;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🎯 Promise Callbacks Visualization</h1>
+        <p class="subtitle">Understanding Callbacks in Promises - Interactive Demo</p>
+
+        <div class="legend">
+            <div class="legend-item">
+                <div class="legend-color color-1"></div>
+                <div>
+                    <strong>Callback 1:</strong> Promise Executor<br>
+                    <small>Called immediately by Promise</small>
+                </div>
+            </div>
+            <div class="legend-item">
+                <div class="legend-color color-2"></div>
+                <div>
+                    <strong>Callback 2:</strong> setTimeout Function<br>
+                    <small>Called after 5 seconds</small>
+                </div>
+            </div>
+            <div class="legend-item">
+                <div class="legend-color color-3"></div>
+                <div>
+                    <strong>Callback 3:</strong> .then() Handler<br>
+                    <small>Called when promise resolves</small>
+                </div>
+            </div>
+        </div>
+
+        <div class="code-section">
+            <div class="code-line"><span class="keyword">new</span> <span class="function">Promise</span>(</div>
+            <div class="code-line callback-1" id="callback1">    <span class="comment">// ← CALLBACK 1: Executor Function</span></div>
+            <div class="code-line callback-1" id="callback1-2">    (<span class="keyword">resolve</span>, <span class="keyword">reject</span>) => {</div>
+            <div class="code-line">        <span class="function">setTimeout</span>(</div>
+            <div class="code-line callback-2" id="callback2">            <span class="comment">// ← CALLBACK 2: setTimeout Callback</span></div>
+            <div class="code-line callback-2" id="callback2-2">            () => {</div>
+            <div class="code-line callback-2" id="callback2-3">                <span class="function">resolve</span>(<span class="string">"Arju Thapa"</span>);</div>
+            <div class="code-line callback-2" id="callback2-4">            },</div>
+            <div class="code-line">            <span class="string">5000</span></div>
+            <div class="code-line">        );</div>
+            <div class="code-line callback-1">    }</div>
+            <div class="code-line">).<span class="function">then</span>(</div>
+            <div class="code-line callback-3" id="callback3">    <span class="comment">// ← CALLBACK 3: .then() Handler</span></div>
+            <div class="code-line callback-3" id="callback3-2">    <span class="keyword">name</span> => {</div>
+            <div class="code-line callback-3" id="callback3-3">        <span class="keyword">console</span>.<span class="function">log</span>(<span class="string">"My name is"</span>, name);</div>
+            <div class="code-line callback-3" id="callback3-4">    }</div>
+            <div class="code-line">);</div>
+        </div>
+
+        <div class="control-panel">
+            <button class="btn" onclick="startDemo()">▶️ Start Demo</button>
+            <button class="btn" onclick="resetDemo()">🔄 Reset</button>
+        </div>
+
+        <div class="timeline">
+            <h2 style="margin-bottom: 20px; color: #667eea;">Execution Timeline</h2>
+            
+            <div class="timeline-item" id="step1">
+                <div class="timeline-number">1</div>
+                <div class="timeline-content">
+                    <div class="timeline-title">Promise Created</div>
+                    <div class="timeline-desc">CALLBACK 1 (Executor) is called immediately by Promise constructor</div>
+                </div>
+            </div>
+
+            <div class="timeline-item" id="step2">
+                <div class="timeline-number">2</div>
+                <div class="timeline-content">
+                    <div class="timeline-title">setTimeout Registered</div>
+                    <div class="timeline-desc">CALLBACK 2 is registered to run after 5 seconds</div>
+                </div>
+            </div>
+
+            <div class="timeline-item" id="step3">
+                <div class="timeline-number">3</div>
+                <div class="timeline-content">
+                    <div class="timeline-title">Waiting... ⏳</div>
+                    <div class="timeline-desc">Promise is in PENDING state, waiting for setTimeout</div>
+                </div>
+            </div>
+
+            <div class="timeline-item" id="step4">
+                <div class="timeline-number">4</div>
+                <div class="timeline-content">
+                    <div class="timeline-title">setTimeout Fires</div>
+                    <div class="timeline-desc">After 5 seconds, CALLBACK 2 executes and calls resolve()</div>
+                </div>
+            </div>
+
+            <div class="timeline-item" id="step5">
+                <div class="timeline-number">5</div>
+                <div class="timeline-content">
+                    <div class="timeline-title">Promise Resolved</div>
+                    <div class="timeline-desc">Promise state changes to FULFILLED with value "Arju Thapa"</div>
+                </div>
+            </div>
+
+            <div class="timeline-item" id="step6">
+                <div class="timeline-number">6</div>
+                <div class="timeline-content">
+                    <div class="timeline-title">.then() Executes</div>
+                    <div class="timeline-desc">CALLBACK 3 is called with the resolved value</div>
+                </div>
+            </div>
+        </div>
+
+        <div class="output-box" id="output">
+            Click "Start Demo" to see the output
+        </div>
+
+        <div class="info-box">
+            <h3>💡 Key Takeaways</h3>
+            <p>
+                <strong>1. Callback 1 (Executor):</strong> Runs immediately when Promise is created<br>
+                <strong>2. Callback 2 (setTimeout):</strong> Runs after 5 seconds, resolves the promise<br>
+                <strong>3. Callback 3 (.then):</strong> Runs when promise is resolved, receives the value<br><br>
+                All three are <strong>callback functions</strong> because they are passed as arguments and called by someone else!
+            </p>
+        </div>
+    </div>
+
+    <script>
+        let demoRunning = false;
+
+        function highlightCode(elementId) {
+            const element = document.getElementById(elementId);
+            if (element) {
+                element.classList.add('highlight');
+                setTimeout(() => element.classList.remove('highlight'), 1000);
+            }
+        }
+
+        function activateStep(stepId) {
+            const step = document.getElementById(stepId);
+            if (step) {
+                step.classList.add('active');
+            }
+        }
+
+        function resetDemo() {
+            demoRunning = false;
+            document.querySelectorAll('.timeline-item').forEach(item => {
+                item.classList.remove('active');
+            });
+            document.getElementById('output').textContent = 'Click "Start Demo" to see the output';
+            document.getElementById('output').classList.remove('show');
+        }
+
+        async function startDemo() {
+            if (demoRunning) return;
+            demoRunning = true;
+            resetDemo();
+
+            const output = document.getElementById('output');
+            
+            // Step 1: Promise created, Callback 1 runs
+            output.textContent = '⏳ Promise created...';
+            activateStep('step1');
+            highlightCode('callback1');
+            highlightCode('callback1-2');
+            await sleep(1500);
+
+            // Step 2: setTimeout registered
+            output.textContent = '⏳ setTimeout registered, Callback 2 scheduled...';
+            activateStep('step2');
+            highlightCode('callback2');
+            highlightCode('callback2-2');
+            await sleep(1500);
+
+            // Step 3: Waiting
+            activateStep('step3');
+            output.textContent = '⏳ Waiting for 5 seconds...';
+            
+            // Countdown
+            for (let i = 5; i > 0; i--) {
+                output.textContent = `⏳ Waiting... ${i} seconds remaining`;
+                await sleep(1000);
+            }
+
+            // Step 4: setTimeout fires
+            output.textContent = '🔥 setTimeout fired! Callback 2 executing...';
+            activateStep('step4');
+            highlightCode('callback2-3');
+            await sleep(1500);
+
+            // Step 5: Promise resolved
+            output.textContent = '✅ Promise resolved with "Arju Thapa"';
+            activateStep('step5');
+            await sleep(1500);
+
+            // Step 6: .then() executes
+            output.textContent = '🎉 My name is Arju Thapa';
+            output.classList.add('show');
+            activateStep('step6');
+            highlightCode('callback3');
+            highlightCode('callback3-2');
+            highlightCode('callback3-3');
+            
+            demoRunning = false;
+        }
+
+        function sleep(ms) {
+            return new Promise(resolve => setTimeout(resolve, ms));
+        }
+    </script>
+</body>
+</html>

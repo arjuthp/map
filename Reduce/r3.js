@@ -12,6 +12,11 @@ console.log(`Question 3: Build Inventory Summary from Orders`)
 //   Keyboard: {totalUnitsSold: 3, totalRevenue: 225}
 // }
 
+
+
+
+
+
 const productDetails = [
   {orderId: "ORD001", product: "Laptop", units: 2, pricePerUnit: 999},
   {orderId: "ORD002", product: "Mouse", units: 5, pricePerUnit: 25},
